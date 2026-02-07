@@ -7,6 +7,7 @@ import {
 } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { GenderEnum, ProviderEnum } from 'src/common/enums/user.enum';
+import { hash } from 'src/common/utils/hashing/hash';
 
 @Schema({
   timestamps: true,
@@ -85,6 +86,11 @@ export class User {
 }
 export type HUserDocument = HydratedDocument<User>;
 export const userSchema = SchemaFactory.createForClass(User);
+userSchema.pre('save', async function () {
+  if (this.isModified('password')) {
+    this.password = await hash(this.password);
+  }
+});
 export const UserModel = MongooseModule.forFeature([
   {
     name: User.name,
