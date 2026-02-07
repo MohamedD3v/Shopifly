@@ -1,0 +1,93 @@
+import {
+  MongooseModule,
+  Prop,
+  Schema,
+  SchemaFactory,
+  Virtual,
+} from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+import { GenderEnum, ProviderEnum } from 'src/common/enums/user.enum';
+
+@Schema({
+  timestamps: true,
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true },
+})
+export class User {
+  @Prop({
+    type: String,
+    required: true,
+    minlength: 2,
+    maxLength: 20,
+    trim: true,
+  })
+  firstName: string;
+  @Prop({
+    type: String,
+    required: true,
+    minlength: 2,
+    maxLength: 20,
+    trim: true,
+  })
+  lastName: string;
+  @Virtual({
+    get: function () {
+      return this.firstName + ' ' + this.lastName;
+    },
+    set: function (value: string) {
+      const [firstName, lastName] = value.split(' ') || [];
+      this.set({ firstName, lastName });
+    },
+  })
+  username: string;
+  @Prop({
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+  })
+  email: string;
+  @Prop({
+    type: String,
+    minlength: 8,
+    required: function () {
+      return this.provider === 'google' ? false : true;
+    },
+  })
+  password: string;
+  @Prop({
+    type: Date,
+  })
+  confirmEmail: Date;
+  @Prop({
+    type: String,
+  })
+  confirmEmailOTP: string;
+  @Prop({
+    type: String,
+    enum: {
+      values: Object.values(GenderEnum),
+      message: 'invalid Gender',
+    },
+    default: GenderEnum.male,
+  })
+  gender: string;
+  @Prop({
+    type: String,
+    enum: {
+      values: Object.values(ProviderEnum),
+      message: 'invalid Provider',
+    },
+    default: ProviderEnum.system,
+  })
+  provider: string;
+}
+export type HUserDocument = HydratedDocument<User>;
+export const userSchema = SchemaFactory.createForClass(User);
+export const UserModel = MongooseModule.forFeature([
+  {
+    name: User.name,
+    schema: userSchema,
+  },
+]);
