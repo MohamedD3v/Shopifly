@@ -15,3 +15,13 @@ export const createUserSchema = z
     message: 'Password not match',
     path: ['confirmPassword'],
   });
+
+export const loginSchema = z.strictObject({
+  email: z.email(),
+  password: z.string().min(8),
+});
+
+export const confirmEmailSchema = z.strictObject({
+  email: z.email(),
+  otp: z.string().min(6).max(6),
+});

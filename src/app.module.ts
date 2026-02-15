@@ -5,10 +5,13 @@ import { ConfigModule } from '@nestjs/config';
 import { resolve } from 'node:path';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
-import { AuthService } from './auth/auth.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserModel } from './DB/models/user.model';
+import { OtpModel } from './DB/models/otp.model';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthService } from './auth/auth.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,8 +29,11 @@ import { MongooseModule } from '@nestjs/mongoose';
     AuthModule,
     UserModule,
     ProductModule,
+    UserModel,
+    OtpModel,
+    JwtModule
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
+  providers: [AppService , AuthService],
 })
 export class AppModule {}

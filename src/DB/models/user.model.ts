@@ -8,6 +8,7 @@ import {
 import { HydratedDocument } from 'mongoose';
 import { GenderEnum, ProviderEnum } from 'src/common/enums/user.enum';
 import { hash } from 'src/common/utils/hashing/hash';
+import { HOtpDocument } from './otp.model';
 
 @Schema({
   timestamps: true,
@@ -83,9 +84,16 @@ export class User {
     default: ProviderEnum.system,
   })
   provider: string;
+  @Virtual()
+  otp: HOtpDocument[];
 }
 export type HUserDocument = HydratedDocument<User>;
 export const userSchema = SchemaFactory.createForClass(User);
+userSchema.virtual('otp', {
+  localField: '_id',
+  foreignField: 'createdBy',
+  ref: 'Otp',
+});
 userSchema.pre('save', async function () {
   if (this.isModified('password')) {
     this.password = await hash(this.password);

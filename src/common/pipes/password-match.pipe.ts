@@ -4,8 +4,6 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import type { ZodSchema } from 'zod/v3';
-
 @Injectable()
 export class PasswordMatchPipe implements PipeTransform {
   transform(value: any, metaData: ArgumentMetadata) {

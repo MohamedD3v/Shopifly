@@ -9,7 +9,7 @@ export class ZodPipe implements PipeTransform {
       const parsedValue = this.schema.parse(value) as unknown;
       return parsedValue;
     } catch (error) {
-      throw new BadRequestException('Validation failed', error as Error);
+      throw new BadRequestException('Validation failed', error);
     }
   }
 }
