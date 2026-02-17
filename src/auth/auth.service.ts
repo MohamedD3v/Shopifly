@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  Delete,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { OTPEnum, ProviderEnum } from 'src/common/enums/user.enum';
 import { compare } from 'src/common/utils/hashing/hash';
 import { randomUUID } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -112,5 +114,8 @@ export class AuthService {
       access_token,
       refresh_token,
     };
+  }
+  async getProfile(req: any) {
+    return { message: 'profile fetched', user: req.user };
   }
 }
