@@ -118,4 +118,8 @@ export class AuthService {
   async getProfile(req: any) {
     return { message: 'profile fetched', user: req.user };
   }
+
+  async uploadFile(file:Express.Multer.File){
+    return {message:"File has been uploaded Successfully" , data:file}
+  }
 }

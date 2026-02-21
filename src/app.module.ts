@@ -13,6 +13,9 @@ import { OtpModel } from './DB/models/otp.model';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth/auth.service';
 import { logger, LoggerMiddleware } from './Middleware/logger.middleware';
+import { BrandModule } from './brand/brand.module';
+import { CategoryModule } from './category/category.module';
+import { BrandModule } from './brand/brand.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,6 +36,8 @@ import { logger, LoggerMiddleware } from './Middleware/logger.middleware';
     UserModel,
     OtpModel,
     JwtModule,
+    BrandModule,
+    CategoryModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService],
