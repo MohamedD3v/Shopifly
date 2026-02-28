@@ -13,3 +13,8 @@ export enum OTPEnum {
   reset_password = 'resetPassword',
   twoStep_Verify = 'twoStepVerify',
 }
+
+export enum RoleEnum {
+  user = 'user',
+  admin = 'admin',
+}

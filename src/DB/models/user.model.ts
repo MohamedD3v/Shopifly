@@ -6,7 +6,7 @@ import {
   Virtual,
 } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { GenderEnum, ProviderEnum } from 'src/common/enums/user.enum';
+import { GenderEnum, ProviderEnum, RoleEnum } from 'src/common/enums/user.enum';
 import { hash } from 'src/common/utils/hashing/hash';
 import { HOtpDocument } from './otp.model';
 
@@ -86,6 +86,15 @@ export class User {
   provider: string;
   @Virtual()
   otp: HOtpDocument[];
+  @Prop({
+    type: String,
+    enum: {
+      values: Object.values(RoleEnum),
+      message: 'In-valid Role',
+    },
+    default: RoleEnum.user,
+  })
+  role: RoleEnum;
 }
 export type HUserDocument = HydratedDocument<User>;
 export const userSchema = SchemaFactory.createForClass(User);

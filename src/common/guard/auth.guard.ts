@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { HUserDocument, User } from 'src/DB/models/user.model';
 import { Model } from 'mongoose';
-
+import { Reflector } from '@nestjs/core';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
     const authHeader = request.headers.authorization;
     if (!authHeader)
       throw new UnauthorizedException('Please Input Authorization Token');
-    const token = authHeader.split(" ")[1];
+    const token = authHeader.split(' ')[1];
     if (!token) throw new UnauthorizedException('in-valid token format');
     const payload = this.jwtService.verify(token, {
       secret: process.env.ACCESS_TOKEN_SECRET,
@@ -30,5 +30,20 @@ export class AuthGuard implements CanActivate {
     if (!user) throw new NotFoundException('user not found');
     request.user = user;
     return true;
+  }
+}
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const requiredRoles = this.reflector.get<string[]>(
+      'roles',
+      context.getHandler(),
+    );
+    if (!requiredRoles) {
+      return true;
+    }
+    const req = context.switchToHttp().getRequest();
+    return requiredRoles.includes(req.user?.role);
   }
 }
